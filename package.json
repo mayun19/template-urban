@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@elgorditosalsero/react-gtm-hook": "^2.4.0",
-    "@sirclo/nexus": "2.19.17",
+    "@sirclo/nexus": "2.19.19-beta.1",
     "bootstrap": "^4.5.0",
     "cookie": "^0.4.1",
     "env-cmd": "^10.1.0",

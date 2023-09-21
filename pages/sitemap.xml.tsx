@@ -7,6 +7,7 @@ import {
   getBlogs,
   getArticles,
   getAllowedActions,
+  useAuthToken,
 } from "@sirclo/nexus";
 import { GRAPHQL_URI } from "lib/Constants";
 
@@ -14,6 +15,9 @@ const Sitemap = () => <></>;
 export default Sitemap;
 
 export async function getServerSideProps({ req, res }) {
+  const tokenData = await useAuthToken({req, res, env: process.env});
+  const token = tokenData.value;
+
   let pages = await globby([
     "pages/**/*.tsx",
     "!pages/**/[*.tsx",
@@ -21,24 +25,24 @@ export async function getServerSideProps({ req, res }) {
   ]);
 
   let products: Array<any> = [];
-  const { totalItems } = await getProductCount(GRAPHQL_URI(req));
+  const { totalItems } = await getProductCount(GRAPHQL_URI(req), token);
   const totalPage: number = Math.ceil(totalItems / 100);
   for (let i = 0; i < totalPage && i < 10; i++) {
-    const result = await getProducts(GRAPHQL_URI(req), i);
+    const result = await getProducts(GRAPHQL_URI(req), token, i);
     products.push(...result.items);
   }
 
   const languages = ["id", "en"];
-  const allowedActions = await getAllowedActions(GRAPHQL_URI(req));
-  const categories = await getCategories(GRAPHQL_URI(req));
-  const allArticles = await getArticles(GRAPHQL_URI(req));
+  const allowedActions = await getAllowedActions(GRAPHQL_URI(req), token);
+  const categories = await getCategories(GRAPHQL_URI(req), token);
+  const allArticles = await getArticles(GRAPHQL_URI(req), token);
   const articles = allArticles?.filter((item) => item.isActive === true);
 
   const blogs = allowedActions["BLOG_VIEW"]
-    ? await getBlogs(GRAPHQL_URI(req))
+    ? await getBlogs(GRAPHQL_URI(req), token)
     : [];
   const lookbooks = allowedActions["LOOKBOOK_VIEW"]
-    ? await getLookbooks(GRAPHQL_URI(req))
+    ? await getLookbooks(GRAPHQL_URI(req), token)
     : [];
 
   if (!allowedActions["BLOG_VIEW"]) {

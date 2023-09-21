@@ -89,13 +89,15 @@ export async function getServerSideProps({
   params
 }) {
   const { slug } = params
+
+  const tokenData = await useAuthToken({ req, res, env: process.env }); 
+	const token = tokenData.value; 
   const [
-    brand,
+    { brand },
     data
   ] = await Promise.all([
-    useBrandCommon(req, params),
-    getProductDetail(GRAPHQL_URI(req), slug),
-    useAuthToken({req, res, env: process.env})
+    useBrandCommon(req, params, token),
+    getProductDetail(GRAPHQL_URI(req), slug, token)
   ])
   const urlSite = `https://${req.headers.host}/${params.lng}/product/${slug}`
 

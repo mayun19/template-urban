@@ -166,13 +166,15 @@ export const getServerSideProps: GetServerSideProps = async ({
   res,
   params
 }) => {
+  const tokenData = await useAuthToken({ req, res, env: process.env }); 
+	const token = tokenData.value;
+  
   const [
-    brand,
+    { brand },
     headerImage
   ] = await Promise.all([
-    useBrandCommon(req, params),
-    getBlogHeaderImage(GRAPHQL_URI(req)),
-    useAuthToken({req, res, env: process.env})
+    useBrandCommon(req, params, token),
+    getBlogHeaderImage(GRAPHQL_URI(req), token),
   ])
 
   return {

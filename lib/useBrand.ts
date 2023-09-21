@@ -6,10 +6,11 @@ import locales from 'locales'
 
 export const useBrandCommon = async (
   req: IncomingMessage,
-  params: ParsedUrlQuery
+  params: ParsedUrlQuery,
+  token: string
 ) => {
   try {
-    const brand = await getBrand(GRAPHQL_URI(req))
+    const brand = await getBrand(GRAPHQL_URI(req), token)
     const lng = brand?.settings?.defaultLanguage || params.lng || 'id'
     const lngDict = locales(lng) || {}
 

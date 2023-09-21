@@ -148,13 +148,14 @@ export const getServerSideProps: GetServerSideProps = async ({
   res,
   params
 }) => {
+  const tokenData = await useAuthToken({ req, res, env: process.env }); 
+	const token = tokenData.value;
   const [
-    brand,
+    { brand },
     { hasGoogleAuth, hasFacebookAuth, hasOtp }
   ] = await Promise.all([
-    useBrandCommon(req, params),
-    useAuthMethod(req),
-    useAuthToken({req, res, env: process.env})
+    useBrandCommon(req, params, token),
+    useAuthMethod(req, token),
   ])
 
   const cookies = parseCookies(req)

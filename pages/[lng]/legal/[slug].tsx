@@ -98,10 +98,10 @@ export const getServerSideProps: GetServerSideProps = async ({
     params
 }) => {
     const { slug } = params
-    const [ brand ] = await Promise.all([
-        useBrandCommon(req, params),
-        useAuthToken({req, res, env: process.env})
-    ])
+
+    const tokenData = await useAuthToken({ req, res, env: process.env }); 
+	const token = tokenData.value;
+    const { brand } = await useBrandCommon(req, params, token);
 
     return {
         props: {

@@ -44,6 +44,8 @@ const Home: FC<any> = ({
     }
   }
 
+  console.log({brand: brand}, {banners: dataBanners});
+
   return (
     <Layout {...layoutProps}>
       <div className="container-fluid p-0">
@@ -182,15 +184,15 @@ export const getServerSideProps: GetServerSideProps = async ({
   res,
   params
 }: any) => {
+  const tokenData = await useAuthToken({ req, res, env: process.env }); 
+	const token = tokenData.value; 
   const [
     brand,
     dataBanners,
     { isAllProductsSectionActive, isMenuCategorySectionActive }
   ] = await Promise.all([
-    useBrandCommon(req, params),
-    handleGetBanner(req),
-    useGetHomepageSection(GRAPHQL_URI(req)),
-    useAuthToken({req, res, env: process.env})
+    useBrandCommon(req, params, token),
+    handleGetBanner(req, token)
   ])
 
   const allowedUri: Array<string> = ['en', 'id', 'graphql', 'favicon.ico', "manifest", "sitemap.xml"]
@@ -202,6 +204,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     res.end()
   }
 
+  console.log('gssp', token, brand, dataBanners);
   return {
     props: {
       ...brand,
