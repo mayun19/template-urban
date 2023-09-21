@@ -44,8 +44,6 @@ const Home: FC<any> = ({
     }
   }
 
-  console.log({brand: brand}, {banners: dataBanners});
-
   return (
     <Layout {...layoutProps}>
       <div className="container-fluid p-0">
@@ -204,7 +202,6 @@ export const getServerSideProps: GetServerSideProps = async ({
     res.end()
   }
 
-  console.log('gssp', token, brand, dataBanners);
   return {
     props: {
       ...brand,
