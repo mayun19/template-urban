@@ -218,10 +218,8 @@ export const getServerSideProps: GetServerSideProps = async ({
 	const token = tokenData.value;
   
   const { slug } = params
-  const [ brand ] = await Promise.all([
-    useBrandCommon(req, params, token),
-    useAuthToken({req, res, env: process.env})
-  ])
+  const brand = await useBrandCommon(req, params, token)
+  
   const urlSite = `https://${req.headers.host}/${params.lng}/blog/${slug}`
 
   return {
